@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
-<!-- =======================
-        ETAPA 1 - HEAD
-        Metadados, fontes, ícones e estilos principais
-======================= -->
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Meus links - Leonardo Marques │ Dev</title>
 
     <!-- Font Awesome (ícones) -->
@@ -21,7 +17,19 @@
 
     <!-- Estilos internos -->
     <style>
-        /* ========== ETAPA 2 - VARIÁVEIS E ESTILO GLOBAL ========== */
+        /* ========== CORREÇÕES PARA REMOVER SCROLL HORIZONTAL ========== */
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        /* ========== VARIÁVEIS E ESTILO GLOBAL ========== */
         :root {
             --primary-bg: #0d0d0d;
             --secondary-bg: #1a1a1a;
@@ -32,15 +40,13 @@
         }
 
         body {
-            margin: 0;
-            padding: 0;
             font-family: 'Poppins', sans-serif;
             background-color: var(--primary-bg);
             color: var(--text-color);
             overflow: hidden; /* impede scroll no carregamento */
         }
 
-        /* ========== ETAPA 3 - PRELOADER (tela de carregamento) ========== */
+        /* ========== PRELOADER ========== */
         #preloader {
             position: fixed;
             top: 0;
@@ -92,14 +98,12 @@
             z-index: 2;
         }
 
-        /* Animação de flutuação */
         @keyframes float {
             0% { transform: translateY(15px) scale(0.6); opacity: 0.7; }
             50% { transform: translateY(-15px) scale(1); opacity: 1; }
             100% { transform: translateY(15px) scale(0.6); opacity: 0.7; }
         }
 
-        /* Posição de cada partícula */
         .particles .particle:nth-child(1) { left: 10%; top: 10%; animation-delay: 0s; }
         .particles .particle:nth-child(2) { left: 30%; top: 30%; animation-delay: 0.5s; }
         .particles .particle:nth-child(3) { left: 50%; top: 20%; animation-delay: 1s; }
@@ -111,9 +115,10 @@
         .particles .particle:nth-child(9) { left: 80%; top: 25%; animation-delay: 1.2s; }
         .particles .particle:nth-child(10) { left: 5%; top: 45%; animation-delay: 1.8s; }
 
-        /* ========== ETAPA 4 - CONTEÚDO PRINCIPAL (estilo do container) ========== */
+        /* ========== CONTEÚDO PRINCIPAL ========== */
         .phone-frame {
-            width: 390px;
+            width: 100%;
+            max-width: 390px;
             margin: 40px auto;
             padding: 20px;
             border: 16px solid #333;
@@ -121,7 +126,7 @@
             background-color: black;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             position: relative;
-            display: none; /* escondido até carregar */
+            display: none;
         }
 
         .phone-frame::before {
@@ -137,12 +142,14 @@
         }
 
         .container {
+            width: 100%;
             max-width: 100%;
             margin: 0 auto;
             padding: 20px 15px;
+            overflow: hidden;
         }
 
-        /* ========== ETAPA 5 - PERFIL ========== */
+        /* ========== PERFIL ========== */
         .profile {
             display: flex;
             align-items: center;
@@ -173,7 +180,7 @@
             border: 2px solid var(--highlight);
         }
 
-        /* ========== ETAPA 6 - HARD SKILLS (ícones de tecnologias) ========== */
+        /* ========== HARD SKILLS ========== */
         .skills {
             padding: 15px;
             margin-bottom: 20px;
@@ -183,52 +190,43 @@
         }
         
         .skills-icons {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    align-items: center;
-}
-
-.skills-icons i {
-    font-size: 20px;
-    transition: color 0.3s ease, transform 0.3s ease;
-    cursor: pointer;
-}
-
-.skills-icons i:hover {
-    transform: scale(1.2);
-}
-
-/* Cores individuais ao passar o mouse */
-.skills-icons .html:hover { color: #e34c26; }
-.skills-icons .css:hover { color: #264de4; }
-.skills-icons .js:hover { color: #f0db4f; }
-.skills-icons .bootstrap:hover { color: #f702c2; }
-.skills-icons .react:hover { color: #f08307; }
-.skills-icons .php:hover { color: #777bb4; }
-.skills-icons .java:hover { color: #f89820; }
-.skills-icons .github:hover { color: #999; }
-.skills-icons .wix:hover { color: #faad4d; }
-.skills-icons .wordpress:hover { color: #21759b; }
-
-.skills-title {
-    display: block;
-    color: var(--highlight);
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-    text-align: center;
-}
-
-        .icons {
+            width: 100%;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            font-size: 60px;
+            justify-content: center;
+            gap: 15px;
+            align-items: center;
         }
 
-        /* ========== ETAPA 7 - REDES SOCIAIS (Grade) ========== */
+        .skills-icons i {
+            font-size: 20px;
+            transition: color 0.3s ease, transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .skills-icons i:hover {
+            transform: scale(1.2);
+        }
+
+        .skills-icons .html:hover { color: #e34c26; }
+        .skills-icons .css:hover { color: #264de4; }
+        .skills-icons .js:hover { color: #f0db4f; }
+        .skills-icons .bootstrap:hover { color: #f702c2; }
+        .skills-icons .react:hover { color: #f08307; }
+        .skills-icons .bootstrap:hover { color: #f90dbe; }
+        .skills-icons .github:hover { color: #999; }
+        .skills-icons .wix:hover { color: #faad4d; }
+        .skills-icons .wordpress:hover { color: #21759b; }
+
+        .skills-title {
+            display: block;
+            color: var(--highlight);
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+        /* ========== REDES SOCIAIS ========== */
         .grid-social {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -253,7 +251,7 @@
             background-color: var(--highlight);
         }
 
-        /* ========== ETAPA 8 - LINKS DE AÇÃO (portfólio, serviços) ========== */
+        /* ========== LINKS DE AÇÃO ========== */
         .link-box {
             display: flex;
             align-items: center;
@@ -272,7 +270,7 @@
             color: #000;
         }
 
-        /* ========== ETAPA 9 - SPOTIFY ========== */
+        /* ========== SPOTIFY ========== */
         .spotify iframe {
             text-align: center;
             margin-top: 20px;
@@ -284,7 +282,7 @@
             border-radius: 12px;
         }
 
-        /* ========== ETAPA 10 - RODAPÉ ========== */
+        /* ========== RODAPÉ ========== */
         footer {
             text-align: center;
             font-size: 12px;
@@ -292,13 +290,15 @@
             margin-top: 30px;
         }
 
-        /* ========== ETAPA 11 - RESPONSIVIDADE ========== */
-        @media (max-width: 500px) {
+        /* ========== RESPONSIVIDADE ========== */
+        @media (max-width: 768px) {
             .phone-frame {
                 width: 100%;
+                max-width: 100%;
                 border: none;
                 border-radius: 0;
                 padding: 0;
+                margin: 0;
                 box-shadow: none;
             }
 
@@ -307,46 +307,35 @@
             }
 
             .container {
-                padding: 15px;
+                padding: 20px;
             }
+        }
 
-            /* HARD SKILLS - Estilo com cor personalizada ao passar o mouse */
-            .skills-icons i {
-                transition: color 0.3s ease, transform 0.3s ease;
-                cursor: pointer;
-}
+        @media (max-width: 480px) {
+            .container {
+                padding: 68px;
 
-            /* Efeito de aumento ao passar o mouse */
-            .skills-icons i:hover {
-                transform: scale(1.2);
-}
-
-            /* Cores individuais ao passar o mouse */
-            .skills-icons .html:hover { color: #e34c26; }        /* HTML */
-            .skills-icons .css:hover { color: #264de4; }         /* CSS */
-            .skills-icons .js:hover { color: #f0db4f; }          /* JavaScript */
-            .skills-icons .bootstrap:hover { color: #f702c2; }   /* Bootstrap */
-            .skills-icons .react:hover { color: #f08307; }       /* React */
-            .skills-icons .php:hover { color: #777bb4; }         /* PHP */
-            .skills-icons .java:hover { color: #f89820; }        /* Java */
-            .skills-icons .github:hover { color: #999; }         /* GitHub */
-            .skills-icons .wix:hover { color: #faad4d; }         /* Wix */
-            .skills-icons .wordpress:hover { color: #21759b; }   /* WordPress */
-
+            }
+            
+            .profile {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .grid-social {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 8px;
+            }
         }
     </style>
 </head>
 
-<!-- =======================
-        ETAPA 12 - BODY
-======================= -->
 <body>
-
-    <!-- Preloader (carregamento inicial com texto MARX e partículas) -->
+    <!-- Preloader -->
     <div id="preloader">
         <div class="loader-text-container">
             <div class="particles">
-                <div class="particle"></div> <!-- total: 10 partículas -->
+                <div class="particle"></div>
                 <div class="particle"></div>
                 <div class="particle"></div>
                 <div class="particle"></div>
@@ -361,10 +350,9 @@
         </div>
     </div>
 
-    <!-- Conteúdo principal dentro do "celular" -->
+    <!-- Conteúdo principal -->
     <div class="phone-frame">
         <div class="container">
-
             <!-- Perfil -->
             <a href="#" class="profile">
                 <img src="https://i.ibb.co/Lz52fFnd/IMG-20250301-WA0010.jpg" alt="Foto de perfil" />
@@ -375,21 +363,20 @@
             </a>
 
            <!-- Hard Skills -->
-<div class="skills">
-    <strong class="skills-title">Hard Skills</strong>
-    <div class="skills-icons">
-        <i class="fab fa-html5 html"></i> 
-        <i class="fab fa-css3-alt css"></i>
-        <i class="fab fa-js js"></i>
-        <i class="fab fa-figma"></i>
-        <i class="fab fa-git-alt"></i>
-        <i class="fab fa-php php"></i>
-        <i class="fab fa-java java"></i>
-        <i class="fab fa-github github"></i>
-        <i class="fab fa-wix wix"></i>
-        <i class="fab fa-wordpress wordpress"></i>
-    </div>
-</div>
+           <div class="skills">
+               <strong class="skills-title">Hard Skills</strong>
+               <div class="skills-icons">
+                   <i class="fab fa-html5 html"></i> 
+                   <i class="fab fa-css3-alt css"></i>
+                   <i class="fab fa-js js"></i>
+                   <i class="fab fa-figma figma"></i>
+                   <i class="fab fa-git-alt"></i>
+                   <i class="fab fa-bootstrap bootstrap"></i>
+                   <i class="fab fa-github github"></i>
+                   <i class="fab fa-wix wix"></i>
+                   <i class="fab fa-wordpress wordpress"></i>
+               </div>
+           </div>
 
             <!-- Redes Sociais -->
             <div class="grid-social">
@@ -425,11 +412,9 @@
         </div>
     </div>
 
-    <!-- =======================
-        ETAPA 13 - SCRIPTS
-======================= -->
+    <!-- Scripts -->
     <script>
-        // Preloader: esconde após 3s e exibe o conteúdo
+        // Preloader
         window.addEventListener('load', function () {
             const preloader = document.getElementById('preloader');
             const phoneFrame = document.querySelector('.phone-frame');
@@ -447,6 +432,5 @@
         // Atualiza o ano automaticamente
         document.getElementById("ano-atual").textContent = new Date().getFullYear();
     </script>
-
 </body>
 </html>
