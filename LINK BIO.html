@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meus links - Leonardo Marques │ Dev</title>
+<meta name="description" content="Link Hub de Leonardo Marques: desenvolvimento front-end e UI design." />
+<link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- corrigido: antes era rel="loader-text", por isso a fonte nunca carregava -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&family=Syncopate:wght@700&display=swap" />
+
+<style>
+/* ===== 1. VARIÁVEIS (paleta do design) ===== */
+:root{
+  --bg:#0B0B0F; --card:#12121A; --pill:#15151D; --line:#2A2A35;
+  --text:#F4F4F6; --muted:#9A9AA8;
+  --lime:#C8F43A; --lime-line:#C8F43A; --on-lime:#0B0B0F;
+  --purple:#8B5CF6; --purple-line:#8B5CF6;
+  --blob:rgba(109,63,209,.55);
+}
+:root[data-theme="light"]{
+  --bg:#F5F5F0; --card:#FFFFFF; --pill:#FFFFFF; --line:#D8D8CE;
+  --text:#101014; --muted:#5B5B66;
+  --lime-line:#6F8F00; --purple-line:#6D3FD1;
+  --blob:rgba(139,92,246,.25);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:400 16px/1.5 'Inter',system-ui,sans-serif;overflow-x:hidden;transition:background .3s,color .3s}
+body.loading{overflow:hidden}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--lime-line);outline-offset:3px;border-radius:8px}
+
+/* fundo: brilho roxo + linhas verdes diagonais */
+body::before{content:"";position:fixed;left:-260px;bottom:-300px;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle,var(--blob),transparent 68%);pointer-events:none;z-index:0}
+.lines{position:fixed;right:0;top:0;width:min(46vw,560px);height:46vh;pointer-events:none;z-index:0;opacity:.7}
+
+/* ===== 2. PRELOADER (MARX + partículas) ===== */
+#preloader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:opacity .6s ease}
+#preloader.hide{opacity:0;pointer-events:none}
+.loader{position:relative;width:200px;height:90px;display:flex;align-items:center;justify-content:center}
+.loader b{font:700 34px 'Syncopate',sans-serif;letter-spacing:.04em;position:relative;z-index:2}
+.dot{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--lime);animation:float 3s ease-in-out infinite}
+.dot:nth-child(2n){background:var(--purple)}
+@keyframes float{0%,100%{transform:translateY(14px) scale(.6);opacity:.6}50%{transform:translateY(-14px) scale(1);opacity:1}}
+.dot:nth-child(1){left:6%;top:20%}.dot:nth-child(2){left:24%;top:70%;animation-delay:.4s}.dot:nth-child(3){left:42%;top:5%;animation-delay:.8s}
+.dot:nth-child(4){left:60%;top:80%;animation-delay:1.2s}.dot:nth-child(5){left:78%;top:15%;animation-delay:1.6s}.dot:nth-child(6){left:94%;top:65%;animation-delay:2s}
+
+/* ===== 3. LAYOUT ===== */
+.hub{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:28px 24px 32px}
+.top{display:flex;align-items:center;justify-content:space-between;position:relative;margin-bottom:36px}
+.logo{font:700 22px 'Syncopate',sans-serif;letter-spacing:.04em}
+.actions{display:flex;gap:6px}
+.icon-btn{width:44px;height:44px;display:grid;place-items:center;background:none;border:0;color:var(--text);font-size:18px;cursor:pointer;border-radius:10px}
+.icon-btn:hover{color:var(--lime-line)}
+.menu{position:absolute;right:0;top:56px;min-width:220px;padding:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;display:none;z-index:5;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.menu.open{display:block}
+.menu a{display:flex;gap:12px;align-items:center;padding:12px;border-radius:8px;font-size:15px}
+.menu a:hover{background:var(--pill);color:var(--lime-line)}
+.menu i{width:18px;text-align:center;color:var(--muted)}
+
+/* ===== 4. HERO: FOTO + PERFIL + SKILLS ===== */
+.hero{display:grid;grid-template-columns:minmax(220px,290px) 1fr;gap:36px;align-items:center;margin-bottom:36px}
+.photo{position:relative;aspect-ratio:1/1.02;border-radius:22px;overflow:hidden;background:var(--card)}
+.photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);display:block}
+.photo svg{position:absolute;inset:0;width:100%;height:100%}
+.brand{margin:0;font:700 clamp(40px,6vw,64px)/1 'Syncopate',sans-serif;letter-spacing:.03em}
+.name{margin:18px 0 0;font:600 22px 'Inter',sans-serif}
+.role{margin:2px 0 0;font:400 14px 'Space Mono',monospace;color:var(--lime-line)}
+.skills-title{display:flex;align-items:center;gap:8px;margin:28px 0 14px;font-weight:500;font-size:16px}
+.skills-title::before{content:"";width:3px;height:16px;background:var(--lime);border-radius:2px;transform:skewX(-14deg)}
+.skills-title::after{content:"";width:12px;height:2px;background:var(--lime-line)}
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:0;list-style:none}
+.pills li{padding:8px 18px;border:1px solid var(--line);background:var(--pill);border-radius:999px;font-size:14px;color:var(--text);transition:border-color .2s,transform .2s}
+.pills li:hover{border-color:var(--lime-line);transform:translateY(-2px)}
+
+/* ===== 5. CARDS DE AÇÃO ===== */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:36px}
+.card{display:flex;align-items:center;gap:16px;padding:20px;border:1.5px solid var(--lime-line);border-radius:14px;background:linear-gradient(135deg,rgba(200,244,58,.07),transparent 60%),var(--card);transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(200,244,58,.12)}
+.card.purple{border-color:var(--purple-line);background:linear-gradient(135deg,rgba(139,92,246,.12),transparent 60%),var(--card)}
+.card.purple:hover{box-shadow:0 10px 30px rgba(139,92,246,.2)}
+.ico{flex:none;width:48px;height:48px;display:grid;place-items:center;border-radius:12px;background:var(--lime);color:var(--on-lime);font-size:20px}
+.purple .ico{background:var(--purple);color:#fff}
+.card h2{margin:0;font:600 17px 'Inter',sans-serif}
+.card p{margin:2px 0 0;font-size:13px;color:var(--muted);line-height:1.4}
+.card .go{margin-left:auto;font-size:18px;color:var(--lime-line)}
+.purple .go{color:var(--purple-line)}
+
+/* ===== 6. SPOTIFY ===== */
+.listen h2{display:flex;align-items:center;gap:10px;margin:0 0 14px;font:600 16px 'Inter',sans-serif}
+.listen h2 i{font-size:22px}
+.listen iframe{display:block;width:100%;max-width:460px;height:80px;border:0;border-radius:12px}
+
+/* ===== 7. RODAPÉ ===== */
+footer{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;margin-top:36px;padding-top:22px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+footer span{opacity:.5;margin:0 8px}
+.social{display:flex;gap:6px}
+.social a{width:44px;height:44px;display:grid;place-items:center;font-size:18px;color:var(--text);border-radius:10px}
+.social a:hover{color:var(--lime-line)}
+
+/* ===== 8. RESPONSIVO (mobile) ===== */
+@media (max-width:760px){
+  .hub{padding:20px 16px 28px}
+  .hero{grid-template-columns:1fr;gap:20px}
+  .photo{aspect-ratio:16/10}
+  .photo img{object-position:center 25%}
+  .brand{display:none}
+  .name{margin-top:0;font-size:20px}
+  .skills-title{margin-top:20px}
+  .cards{grid-template-columns:1fr;gap:12px}
+  .card{padding:16px}
+  .card p{display:none}
+  .ico{width:40px;height:40px;font-size:17px}
+  .lines{opacity:.35}
+  footer{flex-direction:column;align-items:flex-start}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+
+<body class="loading">
+
+<!-- Preloader -->
+<div id="preloader" aria-hidden="true">
+  <div class="loader">
+    <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+    <b>MARX</b>
+  </div>
+</div>
+
+<!-- linhas decorativas -->
+<svg class="lines" viewBox="0 0 400 200" preserveAspectRatio="xMaxYMin meet" aria-hidden="true">
+  <path d="M400 8 L400 150 M400 8 L120 150" fill="none" stroke="#C8F43A" stroke-width="1.5"/>
+</svg>
+
+<div class="hub">
+
+  <!-- Topo -->
+  <header class="top">
+    <a class="logo" href="#" aria-label="MARX, início">MARX</a>
+    <div class="actions">
+      <button class="icon-btn" id="theme" type="button" aria-label="Alternar tema claro/escuro"><i class="fas fa-moon"></i></button>
+      <button class="icon-btn" id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><i class="fas fa-bars"></i></button>
+    </div>
+    <nav class="menu" id="menu" aria-label="Menu">
+      <a href="https://mdeveloper.netlify.app/" target="_blank" rel="noopener"><i class="fas fa-desktop"></i>Meu site portfólio</a>
+      <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=leonardomb.dev@gmail.com" target="_blank" rel="noopener"><i class="fas fa-user"></i>Contrate meus serviços</a>
+      <a href="https://github.com/LeonardoMarx" target="_blank" rel="noopener"><i class="fab fa-github"></i>GitHub</a>
+      <a href="https://www.instagram.com/leommars/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i>Instagram</a>
+      <a href="https://www.linkedin.com/in/leonardo-marques-bomtempo/" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i>LinkedIn</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- Perfil + Hard Skills -->
+    <section class="hero">
+      <div class="photo">
+        <img src="https://i.ibb.co/W4cxrZ2J/e301d486-6d2f-44a6-af55-7b3114746c8c.jpg" alt="Foto de Leonardo Marques" />
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M26 4 L4 44" stroke="#C8F43A" stroke-width="1.2" fill="none" vector-effect="non-scaling-stroke"/>
+          <path d="M10 96 L18 76" stroke="#C8F43A" stroke-width="1.2" fill="none" vector-effect="non-scaling-stroke"/>
+          <circle cx="19" cy="75" r="1.6" fill="none" stroke="#C8F43A" stroke-width="1.2" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <svg viewBox="0 0 24 24" style="inset:auto;right:12%;top:46%;width:26px;height:26px" aria-hidden="true"><path d="M12 0c.8 6.4 4.6 10.2 12 12-7.4 1.8-11.2 5.6-12 12-.8-6.4-4.6-10.2-12-12C7.4 10.2 11.2 6.4 12 0z" fill="#C8F43A"/></svg>
+      </div>
+
+      <div>
+        <h1 class="brand">MARX</h1>
+        <p class="name">Leonardo Marques</p>
+        <p class="role">Desenvolvedor Freelancer</p>
+        <h2 class="skills-title">Hard Skills</h2>
+        <ul class="pills">
+          <li>HTML</li><li>CSS</li><li>JavaScript</li><li>React</li><li>Next.js</li>
+          <li>TypeScript</li><li>Git</li><li>Figma</li><li>Design UI/UX</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Links de ação -->
+    <section class="cards" aria-label="Links principais">
+      <a class="card" href="https://mdeveloper.netlify.app/" target="_blank" rel="noopener">
+        <span class="ico"><i class="fas fa-desktop"></i></span>
+        <span><h2>Meu site portfólio</h2><p>Confira meus projetos e trabalhos recentes.</p></span>
+        <i class="fas fa-arrow-right go"></i>
+      </a>
+      <a class="card purple" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=leonardomb.dev@gmail.com" target="_blank" rel="noopener">
+        <span class="ico"><i class="far fa-user"></i></span>
+        <span><h2>Contrate meus serviços</h2><p>Vamos conversar sobre o seu projeto.</p></span>
+        <i class="fas fa-arrow-right go"></i>
+      </a>
+    </section>
+
+    <!-- Spotify -->
+    <section class="listen">
+      <h2><i class="fab fa-spotify"></i>Estou escutando...</h2>
+      <iframe title="Música no Spotify" src="https://open.spotify.com/embed/track/5na9M4vuGBFxIAQdD3Hg9s?utm_source=generator&amp;theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </section>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <p style="margin:0">© <span id="ano" style="opacity:1;margin:0"></span> Leonardo Marques<span>|</span>Todos os direitos reservados.</p>
+    <div class="social">
+      <a href="https://github.com/LeonardoMarx" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://www.instagram.com/leommars/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.linkedin.com/in/leonardo-marques-bomtempo/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </footer>
+</div>
+
+<script>
+// Preloader: some depois de ~2s e libera a página
+window.addEventListener('load', function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  setTimeout(function () {
+    var p = document.getElementById('preloader');
+    p.classList.add('hide');
+    document.body.classList.remove('loading');
+    setTimeout(function () { p.style.display = 'none'; }, 600);
+  }, reduce ? 0 : 2000);
+});
+
+// Ano automático
+document.getElementById('ano').textContent = new Date().getFullYear();
+
+// Menu (hambúrguer)
+var btn = document.getElementById('menuBtn'), menu = document.getElementById('menu');
+btn.addEventListener('click', function (e) {
+  e.stopPropagation();
+  var open = menu.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open);
+});
+document.addEventListener('click', function () { menu.classList.remove('open'); btn.setAttribute('aria-expanded', false); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') menu.classList.remove('open'); });
+
+// Tema claro/escuro (lembra a escolha)
+var root = document.documentElement, themeBtn = document.getElementById('theme');
+function setTheme(t){
+  if (t === 'light') root.setAttribute('data-theme','light'); else root.removeAttribute('data-theme');
+  themeBtn.innerHTML = '<i class="fas fa-' + (t === 'light' ? 'sun' : 'moon') + '"></i>';
+  try { localStorage.setItem('theme', t); } catch (e) {}
+}
+try { setTheme(localStorage.getItem('theme') || 'dark'); } catch (e) { setTheme('dark'); }
+themeBtn.addEventListener('click', function(){ setTheme(root.getAttribute('data-theme') === 'light' ? 'dark' : 'light'); });
+</script>
+</body>
+</html>
