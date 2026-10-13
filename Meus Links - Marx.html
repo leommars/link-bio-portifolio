@@ -1,452 +1,251 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
-<!-- =======================
-        ETAPA 1 - HEAD
-        Metadados, fontes, ícones e estilos principais
-======================= -->
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Meus links - Leonardo Marques │ Dev</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Meus links - Leonardo Marques │ Dev</title>
+<meta name="description" content="Link Hub de Leonardo Marques: desenvolvimento front-end e UI design." />
+<link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<!-- corrigido: antes era rel="loader-text", por isso a fonte nunca carregava -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&family=Syncopate:wght@700&display=swap" />
 
-    <!-- Font Awesome (ícones) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-
-    <!-- Ícone da aba -->
-    <link rel="icon" type="image/x-icon" href="assets/img/favicon.ico" />
-
-    <!-- Fonte manuscrita para o preloader -->
-    <link rel="loader-text" href="https://fonts.googleapis.com/css2?family=Rock+Salt&display=swap" />
-
-    <!-- Estilos internos -->
-    <style>
-        /* ========== ETAPA 2 - VARIÁVEIS E ESTILO GLOBAL ========== */
-        :root {
-            --primary-bg: #0d0d0d;
-            --secondary-bg: #1a1a1a;
-            --text-color: #fff;
-            --highlight: #8e44ad;
-            --card-bg: #121212;
-            --accent: #00acee;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--primary-bg);
-            color: var(--text-color);
-            overflow: hidden; /* impede scroll no carregamento */
-        }
-
-        /* ========== ETAPA 3 - PRELOADER (tela de carregamento) ========== */
-        #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #1a1a1a;
-            z-index: 9999;
-            opacity: 1;
-            transition: opacity 0.8s ease;
-        }
-
-        .loader-text-container {
-            position: absolute;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 70px;
-            height: 70px;
-        }
-
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 50%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: var(--highlight);
-            border-radius: 50%;
-            animation: float 3s linear infinite;
-        }
-
-        .loader-text {
-            color: var(--text-color);
-            font-family: 'Rock Salt', cursive;
-            font-size: 2rem;
-            text-align: center;
-            z-index: 2;
-        }
-
-        /* Animação de flutuação */
-        @keyframes float {
-            0% { transform: translateY(15px) scale(0.6); opacity: 0.7; }
-            50% { transform: translateY(-15px) scale(1); opacity: 1; }
-            100% { transform: translateY(15px) scale(0.6); opacity: 0.7; }
-        }
-
-        /* Posição de cada partícula */
-        .particles .particle:nth-child(1) { left: 10%; top: 10%; animation-delay: 0s; }
-        .particles .particle:nth-child(2) { left: 30%; top: 30%; animation-delay: 0.5s; }
-        .particles .particle:nth-child(3) { left: 50%; top: 20%; animation-delay: 1s; }
-        .particles .particle:nth-child(4) { left: 70%; top: 40%; animation-delay: 1.5s; }
-        .particles .particle:nth-child(5) { left: 90%; top: 15%; animation-delay: 2s; }
-        .particles .particle:nth-child(6) { left: 20%; top: 50%; animation-delay: 2.5s; }
-        .particles .particle:nth-child(7) { left: 40%; top: 10%; animation-delay: 0.2s; }
-        .particles .particle:nth-child(8) { left: 60%; top: 35%; animation-delay: 0.8s; }
-        .particles .particle:nth-child(9) { left: 80%; top: 25%; animation-delay: 1.2s; }
-        .particles .particle:nth-child(10) { left: 5%; top: 45%; animation-delay: 1.8s; }
-
-        /* ========== ETAPA 4 - CONTEÚDO PRINCIPAL (estilo do container) ========== */
-        .phone-frame {
-            width: 390px;
-            margin: 40px auto;
-            padding: 20px;
-            border: 16px solid #333;
-            border-radius: 40px;
-            background-color: black;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            position: relative;
-            display: none; /* escondido até carregar */
-        }
-
-        .phone-frame::before {
-            content: '';
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 10px;
-            background-color: #222;
-            border-radius: 10px;
-        }
-
-        .container {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 20px 15px;
-        }
-
-        /* ========== ETAPA 5 - PERFIL ========== */
-        .profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            background-color: var(--card-bg);
-            text-decoration: none;
-            color: var(--text-color);
-            transition: all 0.3s ease;
-        }
-
-        .profile:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        }
-
-        .profile:active {
-            transform: scale(0.98);
-        }
-
-        .profile img {
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            object-fit: cover;
-            border: 2px solid var(--highlight);
-        }
-
-        /* ========== ETAPA 6 - HARD SKILLS (ícones de tecnologias) ========== */
-        .skills {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            background-color: var(--card-bg);
-            transition: all 0.3s ease;
-        }
-        
-        .skills-icons {
-    width: 100%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    align-items: center;
+<style>
+/* ===== 1. VARIÁVEIS (paleta do design) ===== */
+:root{
+  --bg:#0B0B0F; --card:#12121A; --pill:#15151D; --line:#2A2A35;
+  --text:#F4F4F6; --muted:#9A9AA8;
+  --lime:#C8F43A; --lime-line:#C8F43A; --on-lime:#0B0B0F;
+  --purple:#8B5CF6; --purple-line:#8B5CF6;
+  --blob:rgba(109,63,209,.55);
 }
-
-.skills-icons i {
-    font-size: 20px;
-    transition: color 0.3s ease, transform 0.3s ease;
-    cursor: pointer;
+:root[data-theme="light"]{
+  --bg:#F5F5F0; --card:#FFFFFF; --pill:#FFFFFF; --line:#D8D8CE;
+  --text:#101014; --muted:#5B5B66;
+  --lime-line:#6F8F00; --purple-line:#6D3FD1;
+  --blob:rgba(139,92,246,.25);
 }
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--text);font:400 16px/1.5 'Inter',system-ui,sans-serif;overflow-x:hidden;transition:background .3s,color .3s}
+body.loading{overflow:hidden}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible{outline:2px solid var(--lime-line);outline-offset:3px;border-radius:8px}
 
-.skills-icons i:hover {
-    transform: scale(1.2);
+/* fundo: brilho roxo + linhas verdes diagonais */
+body::before{content:"";position:fixed;left:-260px;bottom:-300px;width:640px;height:640px;border-radius:50%;background:radial-gradient(circle,var(--blob),transparent 68%);pointer-events:none;z-index:0}
+.lines{position:fixed;right:0;top:0;width:min(46vw,560px);height:46vh;pointer-events:none;z-index:0;opacity:.7}
+
+/* ===== 2. PRELOADER (MARX + partículas) ===== */
+#preloader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:opacity .6s ease}
+#preloader.hide{opacity:0;pointer-events:none}
+.loader{position:relative;width:200px;height:90px;display:flex;align-items:center;justify-content:center}
+.loader b{font:700 34px 'Syncopate',sans-serif;letter-spacing:.04em;position:relative;z-index:2}
+.dot{position:absolute;width:6px;height:6px;border-radius:50%;background:var(--lime);animation:float 3s ease-in-out infinite}
+.dot:nth-child(2n){background:var(--purple)}
+@keyframes float{0%,100%{transform:translateY(14px) scale(.6);opacity:.6}50%{transform:translateY(-14px) scale(1);opacity:1}}
+.dot:nth-child(1){left:6%;top:20%}.dot:nth-child(2){left:24%;top:70%;animation-delay:.4s}.dot:nth-child(3){left:42%;top:5%;animation-delay:.8s}
+.dot:nth-child(4){left:60%;top:80%;animation-delay:1.2s}.dot:nth-child(5){left:78%;top:15%;animation-delay:1.6s}.dot:nth-child(6){left:94%;top:65%;animation-delay:2s}
+
+/* ===== 3. LAYOUT ===== */
+.hub{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:28px 24px 32px}
+.top{display:flex;align-items:center;justify-content:space-between;position:relative;margin-bottom:36px}
+.logo{font:700 22px 'Syncopate',sans-serif;letter-spacing:.04em}
+.actions{display:flex;gap:6px}
+.icon-btn{width:44px;height:44px;display:grid;place-items:center;background:none;border:0;color:var(--text);font-size:18px;cursor:pointer;border-radius:10px}
+.icon-btn:hover{color:var(--lime-line)}
+.menu{position:absolute;right:0;top:56px;min-width:220px;padding:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;display:none;z-index:5;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.menu.open{display:block}
+.menu a{display:flex;gap:12px;align-items:center;padding:12px;border-radius:8px;font-size:15px}
+.menu a:hover{background:var(--pill);color:var(--lime-line)}
+.menu i{width:18px;text-align:center;color:var(--muted)}
+
+/* ===== 4. HERO: FOTO + PERFIL + SKILLS ===== */
+.hero{display:grid;grid-template-columns:minmax(220px,290px) 1fr;gap:36px;align-items:center;margin-bottom:36px}
+.photo{position:relative;aspect-ratio:1/1.02;border-radius:22px;overflow:hidden;background:var(--card)}
+.photo img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05);display:block}
+.photo svg{position:absolute;inset:0;width:100%;height:100%}
+.brand{margin:0;font:700 clamp(40px,6vw,64px)/1 'Syncopate',sans-serif;letter-spacing:.03em}
+.name{margin:18px 0 0;font:600 22px 'Inter',sans-serif}
+.role{margin:2px 0 0;font:400 14px 'Space Mono',monospace;color:var(--lime-line)}
+.skills-title{display:flex;align-items:center;gap:8px;margin:28px 0 14px;font-weight:500;font-size:16px}
+.skills-title::before{content:"";width:3px;height:16px;background:var(--lime);border-radius:2px;transform:skewX(-14deg)}
+.skills-title::after{content:"";width:12px;height:2px;background:var(--lime-line)}
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin:0;padding:0;list-style:none}
+.pills li{padding:8px 18px;border:1px solid var(--line);background:var(--pill);border-radius:999px;font-size:14px;color:var(--text);transition:border-color .2s,transform .2s}
+.pills li:hover{border-color:var(--lime-line);transform:translateY(-2px)}
+
+/* ===== 5. CARDS DE AÇÃO ===== */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:36px}
+.card{display:flex;align-items:center;gap:16px;padding:20px;border:1.5px solid var(--lime-line);border-radius:14px;background:linear-gradient(135deg,rgba(200,244,58,.07),transparent 60%),var(--card);transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(200,244,58,.12)}
+.card.purple{border-color:var(--purple-line);background:linear-gradient(135deg,rgba(139,92,246,.12),transparent 60%),var(--card)}
+.card.purple:hover{box-shadow:0 10px 30px rgba(139,92,246,.2)}
+.ico{flex:none;width:48px;height:48px;display:grid;place-items:center;border-radius:12px;background:var(--lime);color:var(--on-lime);font-size:20px}
+.purple .ico{background:var(--purple);color:#fff}
+.card h2{margin:0;font:600 17px 'Inter',sans-serif}
+.card p{margin:2px 0 0;font-size:13px;color:var(--muted);line-height:1.4}
+.card .go{margin-left:auto;font-size:18px;color:var(--lime-line)}
+.purple .go{color:var(--purple-line)}
+
+/* ===== 6. SPOTIFY ===== */
+.listen h2{display:flex;align-items:center;gap:10px;margin:0 0 14px;font:600 16px 'Inter',sans-serif}
+.listen h2 i{font-size:22px}
+.listen iframe{display:block;width:100%;max-width:460px;height:80px;border:0;border-radius:12px}
+
+/* ===== 7. RODAPÉ ===== */
+footer{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;margin-top:36px;padding-top:22px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+footer span{opacity:.5;margin:0 8px}
+.social{display:flex;gap:6px}
+.social a{width:44px;height:44px;display:grid;place-items:center;font-size:18px;color:var(--text);border-radius:10px}
+.social a:hover{color:var(--lime-line)}
+
+/* ===== 8. RESPONSIVO (mobile) ===== */
+@media (max-width:760px){
+  .hub{padding:20px 16px 28px}
+  .hero{grid-template-columns:1fr;gap:20px}
+  .photo{aspect-ratio:16/10}
+  .photo img{object-position:center 25%}
+  .brand{display:none}
+  .name{margin-top:0;font-size:20px}
+  .skills-title{margin-top:20px}
+  .cards{grid-template-columns:1fr;gap:12px}
+  .card{padding:16px}
+  .card p{display:none}
+  .ico{width:40px;height:40px;font-size:17px}
+  .lines{opacity:.35}
+  footer{flex-direction:column;align-items:flex-start}
 }
-
-/* Cores individuais ao passar o mouse */
-.skills-icons .html:hover { color: #e34c26; }
-.skills-icons .css:hover { color: #264de4; }
-.skills-icons .js:hover { color: #f0db4f; }
-.skills-icons .bootstrap:hover { color: #f702c2; }
-.skills-icons .react:hover { color: #f08307; }
-.skills-icons .php:hover { color: #777bb4; }
-.skills-icons .java:hover { color: #f89820; }
-.skills-icons .github:hover { color: #999; }
-.skills-icons .wix:hover { color: #faad4d; }
-.skills-icons .wordpress:hover { color: #21759b; }
-
-.skills-title {
-    display: block;
-    color: var(--highlight);
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-    text-align: center;
-}
-
-        .icons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            font-size: 60px;
-        }
-
-        /* ========== ETAPA 7 - REDES SOCIAIS (Grade) ========== */
-        .grid-social {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .grid-social a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            padding: 15px;
-            font-size: 20px;
-            color: var(--text-color);
-            text-decoration: none;
-            transition: background 0.3s ease;
-        }
-
-        .grid-social a:hover {
-            background-color: var(--highlight);
-        }
-
-        /* ========== ETAPA 8 - LINKS DE AÇÃO (portfólio, serviços) ========== */
-        .link-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-radius: 12px;
-            background-color: var(--card-bg);
-            text-decoration: none;
-            color: var(--text-color);
-            transition: all 0.3s ease;
-        }
-
-        .link-box:hover {
-            background-color: var(--highlight);
-            color: #000;
-        }
-
-        /* ========== ETAPA 9 - SPOTIFY ========== */
-        .spotify iframe {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        iframe {
-            width: 100%;
-            border: none;
-            border-radius: 12px;
-        }
-
-        /* ========== ETAPA 10 - RODAPÉ ========== */
-        footer {
-            text-align: center;
-            font-size: 12px;
-            color: #999;
-            margin-top: 30px;
-        }
-
-        /* ========== ETAPA 11 - RESPONSIVIDADE ========== */
-        @media (max-width: 500px) {
-            .phone-frame {
-                width: 100%;
-                border: none;
-                border-radius: 0;
-                padding: 0;
-                box-shadow: none;
-            }
-
-            .phone-frame::before {
-                display: none;
-            }
-
-            .container {
-                padding: 15px;
-            }
-
-            /* HARD SKILLS - Estilo com cor personalizada ao passar o mouse */
-            .skills-icons i {
-                transition: color 0.3s ease, transform 0.3s ease;
-                cursor: pointer;
-}
-
-            /* Efeito de aumento ao passar o mouse */
-            .skills-icons i:hover {
-                transform: scale(1.2);
-}
-
-            /* Cores individuais ao passar o mouse */
-            .skills-icons .html:hover { color: #e34c26; }        /* HTML */
-            .skills-icons .css:hover { color: #264de4; }         /* CSS */
-            .skills-icons .js:hover { color: #f0db4f; }          /* JavaScript */
-            .skills-icons .bootstrap:hover { color: #f702c2; }   /* Bootstrap */
-            .skills-icons .react:hover { color: #f08307; }       /* React */
-            .skills-icons .php:hover { color: #777bb4; }         /* PHP */
-            .skills-icons .java:hover { color: #f89820; }        /* Java */
-            .skills-icons .github:hover { color: #999; }         /* GitHub */
-            .skills-icons .wix:hover { color: #faad4d; }         /* Wix */
-            .skills-icons .wordpress:hover { color: #21759b; }   /* WordPress */
-
-        }
-    </style>
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
 </head>
 
-<!-- =======================
-        ETAPA 12 - BODY
-======================= -->
-<body>
+<body class="loading">
 
-    <!-- Preloader (carregamento inicial com texto MARX e partículas) -->
-    <div id="preloader">
-        <div class="loader-text-container">
-            <div class="particles">
-                <div class="particle"></div> <!-- total: 10 partículas -->
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-                <div class="particle"></div>
-            </div>
-            <div class="loader-text">MARX</div>
-        </div>
-    </div>
-
-    <!-- Conteúdo principal dentro do "celular" -->
-    <div class="phone-frame">
-        <div class="container">
-
-            <!-- Perfil -->
-            <a href="#" class="profile">
-                <img src="https://i.ibb.co/Lz52fFnd/IMG-20250301-WA0010.jpg" alt="Foto de perfil" />
-                <div>
-                    <strong>Leonardo Marques</strong><br />
-                    <small>Desenvolvedor Freelancer</small>
-                </div>
-            </a>
-
-           <!-- Hard Skills -->
-<div class="skills">
-    <strong class="skills-title">Hard Skills</strong>
-    <div class="skills-icons">
-        <i class="fab fa-html5 html"></i> 
-        <i class="fab fa-css3-alt css"></i>
-        <i class="fab fa-js js"></i>
-        <i class="fab fa-figma"></i>
-        <i class="fab fa-git-alt"></i>
-        <i class="fab fa-php php"></i>
-        <i class="fab fa-java java"></i>
-        <i class="fab fa-github github"></i>
-        <i class="fab fa-wix wix"></i>
-        <i class="fab fa-wordpress wordpress"></i>
-    </div>
+<!-- Preloader -->
+<div id="preloader" aria-hidden="true">
+  <div class="loader">
+    <i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i><i class="dot"></i>
+    <b>MARX</b>
+  </div>
 </div>
 
-            <!-- Redes Sociais -->
-            <div class="grid-social">
-                <a class="box-social github" href="https://github.com/LeonardoMarx" target="_blank"><i
-                            class="fab fa-github"></i></a>
-                <a href="https://www.instagram.com/leommars/" target="_blank"><i 
-                    class="fab fa-instagram"></i></a>
-                <a href="https://www.linkedin.com/in/leonardo-marques-bomtempo/" target="_blank"><i 
-                    class="fab fa-linkedin"></i></a>
-            </div>
+<!-- linhas decorativas -->
+<svg class="lines" viewBox="0 0 400 200" preserveAspectRatio="xMaxYMin meet" aria-hidden="true">
+  <path d="M400 8 L400 150 M400 8 L120 150" fill="none" stroke="#C8F43A" stroke-width="1.5"/>
+</svg>
 
-            <!-- Links para portfólio ou serviços -->
-            <a href="https://mdeveloper.netlify.app/" class="link-box" target="_blank">
-                <i class="fas fa-globe"></i>
-                <span>Meu site portfólio</span>
-            </a>
+<div class="hub">
 
-            <a href= "https://mail.google.com/mail/?view=cm&fs=1&to=leonardomb.dev@gmail.com" class="link-box" target="_blank">
-                <i class="fas fa-globe"></i>
-                <span>Contrate meus serviços</span>
-            </a>
-
-            <!-- Música no Spotify -->
-            <div class="spotify">
-                <strong>Estou escutando...</strong><br>
-                <iframe src="https://open.spotify.com/embed/track/5na9M4vuGBFxIAQdD3Hg9s?utm_source=generator&theme=0" height="80" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-            </div>
-
-            <!-- Rodapé -->
-            <footer>
-                © <span id="ano-atual"></span> Leonardo Marques │ Todos os direitos reservados.
-            </footer>
-        </div>
+  <!-- Topo -->
+  <header class="top">
+    <a class="logo" href="#" aria-label="MARX, início">MARX</a>
+    <div class="actions">
+      <button class="icon-btn" id="theme" type="button" aria-label="Alternar tema claro/escuro"><i class="fas fa-moon"></i></button>
+      <button class="icon-btn" id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><i class="fas fa-bars"></i></button>
     </div>
+    <nav class="menu" id="menu" aria-label="Menu">
+      <a href="https://mdeveloper.netlify.app/" target="_blank" rel="noopener"><i class="fas fa-desktop"></i>Meu site portfólio</a>
+      <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=leonardomb.dev@gmail.com" target="_blank" rel="noopener"><i class="fas fa-user"></i>Contrate meus serviços</a>
+      <a href="https://github.com/LeonardoMarx" target="_blank" rel="noopener"><i class="fab fa-github"></i>GitHub</a>
+      <a href="https://www.instagram.com/leommars/" target="_blank" rel="noopener"><i class="fab fa-instagram"></i>Instagram</a>
+      <a href="https://www.linkedin.com/in/leonardo-marques-bomtempo/" target="_blank" rel="noopener"><i class="fab fa-linkedin"></i>LinkedIn</a>
+    </nav>
+  </header>
 
-    <!-- =======================
-        ETAPA 13 - SCRIPTS
-======================= -->
-    <script>
-        // Preloader: esconde após 3s e exibe o conteúdo
-        window.addEventListener('load', function () {
-            const preloader = document.getElementById('preloader');
-            const phoneFrame = document.querySelector('.phone-frame');
+  <main>
+    <!-- Perfil + Hard Skills -->
+    <section class="hero">
+      <div class="photo">
+        <img src="https://i.ibb.co/W4cxrZ2J/e301d486-6d2f-44a6-af55-7b3114746c8c.jpg" alt="Foto de Leonardo Marques" />
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M26 4 L4 44" stroke="#C8F43A" stroke-width="1.2" fill="none" vector-effect="non-scaling-stroke"/>
+          <path d="M10 96 L18 76" stroke="#C8F43A" stroke-width="1.2" fill="none" vector-effect="non-scaling-stroke"/>
+          <circle cx="19" cy="75" r="1.6" fill="none" stroke="#C8F43A" stroke-width="1.2" vector-effect="non-scaling-stroke"/>
+        </svg>
+        <svg viewBox="0 0 24 24" style="inset:auto;right:12%;top:46%;width:26px;height:26px" aria-hidden="true"><path d="M12 0c.8 6.4 4.6 10.2 12 12-7.4 1.8-11.2 5.6-12 12-.8-6.4-4.6-10.2-12-12C7.4 10.2 11.2 6.4 12 0z" fill="#C8F43A"/></svg>
+      </div>
 
-            setTimeout(() => {
-                preloader.style.opacity = '0';
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                    phoneFrame.style.display = 'block';
-                    document.body.style.overflow = 'auto';
-                }, 800);
-            }, 3000);
-        });
+      <div>
+        <h1 class="brand">MARX</h1>
+        <p class="name">Leonardo Marques</p>
+        <p class="role">Desenvolvedor Freelancer</p>
+        <h2 class="skills-title">Hard Skills</h2>
+        <ul class="pills">
+          <li>HTML</li><li>CSS</li><li>JavaScript</li><li>React</li><li>Next.js</li>
+          <li>TypeScript</li><li>Git</li><li>Figma</li><li>Design UI/UX</li>
+        </ul>
+      </div>
+    </section>
 
-        // Atualiza o ano automaticamente
-        document.getElementById("ano-atual").textContent = new Date().getFullYear();
-    </script>
+    <!-- Links de ação -->
+    <section class="cards" aria-label="Links principais">
+      <a class="card" href="https://mdeveloper.netlify.app/" target="_blank" rel="noopener">
+        <span class="ico"><i class="fas fa-desktop"></i></span>
+        <span><h2>Meu site portfólio</h2><p>Confira meus projetos e trabalhos recentes.</p></span>
+        <i class="fas fa-arrow-right go"></i>
+      </a>
+      <a class="card purple" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=leonardomb.dev@gmail.com" target="_blank" rel="noopener">
+        <span class="ico"><i class="far fa-user"></i></span>
+        <span><h2>Contrate meus serviços</h2><p>Vamos conversar sobre o seu projeto.</p></span>
+        <i class="fas fa-arrow-right go"></i>
+      </a>
+    </section>
 
+    <!-- Spotify -->
+    <section class="listen">
+      <h2><i class="fab fa-spotify"></i>Estou escutando...</h2>
+      <iframe title="Música no Spotify" src="https://open.spotify.com/embed/track/5na9M4vuGBFxIAQdD3Hg9s?utm_source=generator&amp;theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </section>
+  </main>
+
+  <!-- Rodapé -->
+  <footer>
+    <p style="margin:0">© <span id="ano" style="opacity:1;margin:0"></span> Leonardo Marques<span>|</span>Todos os direitos reservados.</p>
+    <div class="social">
+      <a href="https://github.com/LeonardoMarx" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <a href="https://www.instagram.com/leommars/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="https://www.linkedin.com/in/leonardo-marques-bomtempo/" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+    </div>
+  </footer>
+</div>
+
+<script>
+// Preloader: some depois de ~2s e libera a página
+window.addEventListener('load', function () {
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  setTimeout(function () {
+    var p = document.getElementById('preloader');
+    p.classList.add('hide');
+    document.body.classList.remove('loading');
+    setTimeout(function () { p.style.display = 'none'; }, 600);
+  }, reduce ? 0 : 2000);
+});
+
+// Ano automático
+document.getElementById('ano').textContent = new Date().getFullYear();
+
+// Menu (hambúrguer)
+var btn = document.getElementById('menuBtn'), menu = document.getElementById('menu');
+btn.addEventListener('click', function (e) {
+  e.stopPropagation();
+  var open = menu.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open);
+});
+document.addEventListener('click', function () { menu.classList.remove('open'); btn.setAttribute('aria-expanded', false); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') menu.classList.remove('open'); });
+
+// Tema claro/escuro (lembra a escolha)
+var root = document.documentElement, themeBtn = document.getElementById('theme');
+function setTheme(t){
+  if (t === 'light') root.setAttribute('data-theme','light'); else root.removeAttribute('data-theme');
+  themeBtn.innerHTML = '<i class="fas fa-' + (t === 'light' ? 'sun' : 'moon') + '"></i>';
+  try { localStorage.setItem('theme', t); } catch (e) {}
+}
+try { setTheme(localStorage.getItem('theme') || 'dark'); } catch (e) { setTheme('dark'); }
+themeBtn.addEventListener('click', function(){ setTheme(root.getAttribute('data-theme') === 'light' ? 'dark' : 'light'); });
+</script>
 </body>
 </html>
