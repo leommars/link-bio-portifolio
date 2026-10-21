@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Meus links - Leonardo Marques │ Dev</title>
+<meta name="description" content="Link Hub de Leonardo Marques: desenvolvimento front-end e UI design." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+
+<style>
+/* ===== VARIÁVEIS (a cor de destaque muda ao clicar no logo) ===== */
+:root{
+  --bg:#0C0C0C; --pill:#171717; --line:#262626;
+  --text:#FFFFFF; --muted:#8E8E8E;
+  --acc:#C8F43A; --acc-text:#C8F43A; --acc-light:#E4FF7A; --acc-dark:#B8E62E;
+  --on-acc:#0C0C0C; --acc-rgb:200,244,58;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100vh;background:var(--bg);color:var(--text);
+  font:400 15px/1.5 'Inter',system-ui,sans-serif;
+}
+body.loading{overflow:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+a:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:3px;border-radius:10px}
+
+/* ===== ÍCONES SVG ===== */
+.ic{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;display:inline-block;vertical-align:middle}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+
+/* ===== PRELOADER ===== */
+#preloader{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:var(--bg);transition:opacity .6s ease}
+#preloader.hide{opacity:0;pointer-events:none}
+.ld{display:flex;flex-direction:column;align-items:center;gap:26px}
+.ghost-wrap{position:relative;width:120px;height:130px;display:grid;place-items:center;animation:bob 1.6s ease-in-out infinite}
+.ghost{width:110px;height:130px;overflow:visible;filter:drop-shadow(0 0 18px rgba(var(--acc-rgb),.45))}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.ghost-wrap.shake{animation:shake .4s linear}
+@keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-6px,2px)}40%{transform:translate(6px,-2px)}60%{transform:translate(-5px,1px)}80%{transform:translate(5px,-1px)}}
+.ghost-wrap.boom{animation:none}
+.ghost-wrap.boom .ghost{animation:ghostOut .25s ease forwards}
+@keyframes ghostOut{to{transform:scale(1.25);opacity:0}}
+.p{position:absolute;left:50%;top:50%;width:6px;height:6px;margin:-3px 0 0 -3px;border-radius:50%;box-shadow:0 0 8px rgba(var(--acc-rgb),.7);animation:boom .9s cubic-bezier(.1,.7,.3,1) forwards;pointer-events:none}
+@keyframes boom{0%{transform:translate(0,0) scale(1.4);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.2);opacity:0}}
+.bar{width:170px;height:3px;background:var(--line);border-radius:3px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc-light));animation:fill 2s ease forwards}
+@keyframes fill{to{width:100%}}
+.ld p{margin:0;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted)}
+
+/* ===== APP ===== */
+.app{
+  position:relative;max-width:430px;margin:0 auto;
+  padding:calc(18px + env(safe-area-inset-top,0px)) 18px 130px;
+}
+
+/* ===== TOPO ===== */
+.topbar{display:flex;align-items:center;justify-content:space-between;position:relative}
+
+/* logo = botão que troca a cor de destaque */
+.logo-btn{
+  position:relative;padding:0;border:0;background:none;cursor:pointer;border-radius:12px;
+  width:36px;height:36px;transition:transform .5s cubic-bezier(.34,1.56,.64,1);
+}
+.logo-btn svg{display:block;width:100%;height:100%;filter:drop-shadow(0 0 10px rgba(var(--acc-rgb),.35))}
+.logo-btn:hover{transform:rotate(-8deg) scale(1.06)}
+.logo-btn:active{transform:scale(.92)}
+.logo-btn.spin{animation:logoSpin .7s cubic-bezier(.34,1.56,.64,1)}
+@keyframes logoSpin{to{transform:rotate(360deg)}}
+
+/* botão de menu: três pontos */
+.menu-btn{
+  width:36px;height:36px;border-radius:50%;border:0;background:none;cursor:pointer;padding:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;transition:background .2s;
+}
+.menu-btn span{width:4px;height:4px;border-radius:50%;background:var(--text);transition:background .2s,transform .3s}
+.menu-btn:hover{background:var(--pill)}
+.menu-btn:hover span,.menu-btn[aria-expanded="true"] span{background:var(--acc-text);transform:scale(1.25)}
+
+.menu{
+  position:absolute;right:0;top:56px;min-width:240px;padding:8px;z-index:30;
+  background:var(--pill);border:1px solid var(--line);border-radius:16px;
+  box-shadow:0 14px 40px rgba(0,0,0,.45);display:none;
+}
+.menu.open{display:block}
+.menu a{display:flex;gap:12px;align-items:center;padding:12px;border-radius:10px;font-size:15px}
+.menu a:hover{background:var(--bg);color:var(--acc-text)}
+.menu a .ic{font-size:18px;color:var(--muted)}
+.menu a:hover .ic{color:var(--acc-text)}
+
+.row2{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+.quick{display:flex;align-items:center;gap:16px;padding-left:4px;font-size:19px}
+.quick a,.quick .bell{position:relative;display:grid;place-items:center;width:32px;height:32px;color:var(--text)}
+.quick a:hover{color:var(--acc-text)}
+.quick .badge{position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:var(--acc);box-shadow:0 0 0 2px var(--bg)}
+
+/* ===== PERFIL ===== */
+.profile{text-align:center;margin-top:26px}
+.avatar{
+  position:relative;width:124px;height:124px;margin:0 auto;border-radius:50%;
+  border:2px dashed var(--acc);padding:6px;
+}
+.avatar .inner{
+  position:relative;width:100%;height:100%;border-radius:50%;overflow:hidden;
+  background:#1f1f1f;display:grid;place-items:center;
+  font:700 32px 'Inter',sans-serif;color:var(--acc-text);
+}
+.avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.05)}
+.name{margin:18px 0 0;font:700 26px/1.2 'Inter',sans-serif;letter-spacing:-.01em}
+.handle{margin-top:2px;color:var(--muted);font-size:15px}
+
+/* ===== STATS ===== */
+.stats{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;align-items:center;margin-top:22px;text-align:center}
+.stats .split{height:38px;background:var(--line)}
+.stat .val{display:flex;align-items:center;justify-content:center;gap:8px;font-size:19px;font-weight:600}
+.stat .val .ic{color:var(--acc-text);font-size:19px}
+.stat .lbl{margin-top:4px;color:var(--muted);font-size:14px}
+
+.section-label{margin:28px 0 10px;font-size:14px;color:var(--muted)}
+
+/* ===== CAIXA DO FANTASMA ===== */
+.fx{
+  position:relative;height:170px;border-radius:20px;overflow:hidden;
+  border:1px solid var(--line);
+  background:radial-gradient(ellipse at 50% 110%,rgba(var(--acc-rgb),.08),transparent 60%),var(--pill);
+  cursor:pointer;transition:border-color .2s;
+}
+.fx:hover,.fx:focus-visible{border-color:var(--acc)}
+.fx canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.fx .hint{
+  position:absolute;left:12px;bottom:10px;z-index:2;font-size:12px;color:var(--muted);
+  background:var(--bg);border:1px solid var(--line);padding:4px 10px;border-radius:999px;
+}
+
+/* ===== CARDS ===== */
+.grid2{display:grid;grid-template-columns:1fr 1.5fr;gap:12px;margin-top:14px}
+.card{
+  background:var(--pill);border:1px solid var(--line);border-radius:20px;padding:20px 16px;
+  transition:transform .2s,border-color .2s;
+}
+.card:hover{transform:translateY(-2px);border-color:var(--acc)}
+
+.social-card{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.socials{display:flex;padding-left:12px}
+.socials a{
+  width:46px;height:46px;margin-left:-12px;border-radius:50%;
+  display:grid;place-items:center;font-size:19px;
+  background:#2A2A2A;border:2px solid var(--pill);color:var(--text);
+  transition:border-color .2s,color .2s,transform .2s;
+}
+.socials a:first-child{background:#3A3A3A}
+.socials a:hover{border-color:var(--acc);color:var(--acc-text);transform:translateY(-3px)}
+.social-card .title{margin-top:14px;font:700 18px 'Inter',sans-serif}
+.social-card .sub{font-size:14px;color:var(--acc-text);font-weight:500}
+
+.trophy{
+  position:relative;overflow:hidden;min-height:150px;display:flex;flex-direction:column;justify-content:center;
+  background:linear-gradient(120deg,rgba(var(--acc-rgb),.18),transparent 65%),var(--pill);
+}
+.trophy h3{margin:0;font:700 19px 'Inter',sans-serif}
+.trophy p{margin:6px 0 0;color:var(--muted);font-size:14px;line-height:1.5;max-width:70%}
+.trophy .big{
+  position:absolute;right:-4px;bottom:-10px;width:104px;height:104px;color:var(--acc-text);
+  opacity:.9;transform:rotate(-8deg);filter:drop-shadow(0 10px 24px rgba(var(--acc-rgb),.25));
+}
+.trophy .steps{display:flex;gap:6px;margin-top:14px}
+.trophy .steps span{width:6px;height:6px;border-radius:50%;background:#444}
+.trophy .steps span.on{background:var(--acc)}
+
+/* ===== BANNER ===== */
+.banner{
+  display:flex;align-items:center;gap:16px;margin-top:14px;padding:14px;
+  background:var(--pill);border:1px solid var(--line);border-radius:22px;
+  transition:border-color .2s;
+}
+.banner:hover{border-color:var(--acc)}
+.banner .art{
+  flex:none;width:104px;height:92px;border-radius:18px;display:grid;place-items:center;
+  background:radial-gradient(circle at 35% 35%,var(--acc-light),var(--acc) 45%,var(--acc-dark) 100%);
+  color:var(--on-acc);font-size:36px;box-shadow:inset 0 -8px 18px rgba(0,0,0,.25);
+}
+.banner h2{margin:0;font:700 18px 'Inter',sans-serif}
+.banner p{margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
+.banner .go{margin-left:auto;color:var(--acc-text);font-size:18px;padding-right:4px}
+
+/* ===== HARD SKILLS ===== */
+.section-title{
+  display:flex;align-items:center;gap:8px;margin:30px 0 12px;font-weight:600;font-size:16px;
+}
+.section-title::before{content:"";width:3px;height:16px;background:var(--acc);border-radius:2px;transform:skewX(-14deg)}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.pills li{
+  padding:8px 16px;border:1px solid var(--line);background:var(--pill);border-radius:999px;
+  font-size:14px;position:relative;overflow:hidden;isolation:isolate;
+  transition:border-color .3s,transform .2s,box-shadow .3s,color .3s;
+}
+.pills li::before{
+  content:"";position:absolute;top:0;bottom:0;left:-70%;width:45%;z-index:-1;
+  background:linear-gradient(100deg,transparent,rgba(var(--acc-rgb),.45),transparent);
+  transform:skewX(-20deg);pointer-events:none;
+}
+.pills li:hover{
+  border-color:var(--acc);transform:translateY(-2px);color:var(--acc-text);
+  box-shadow:0 0 18px rgba(var(--acc-rgb),.35),inset 0 0 12px rgba(var(--acc-rgb),.12);
+}
+.pills li:hover::before{left:130%;transition:left .8s ease}
+
+/* ===== SPOTIFY ===== */
+.listen{margin-top:14px;padding:16px;background:var(--pill);border:1px solid var(--line);border-radius:20px}
+.listen h2{display:flex;align-items:center;gap:10px;margin:0 0 12px;font:600 15px 'Inter',sans-serif}
+.listen h2 .ic{color:var(--acc-text);font-size:20px}
+.listen iframe{display:block;width:100%;height:80px;border:0;border-radius:12px}
+
+/* ===== RODAPÉ ===== */
+footer{margin-top:28px;text-align:center;font-size:13px;color:var(--muted)}
+footer .sep{opacity:.4;margin:0 6px}
+
+/* ===== NAV INFERIOR ===== */
+.bottom{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:0;z-index:20;
+  width:min(100%,430px);display:grid;grid-template-columns:repeat(4,1fr);
+  padding:10px 8px calc(12px + env(safe-area-inset-bottom,0px));
+  background:var(--bg);border-top:1px solid var(--line);
+}
+.bottom a{display:flex;flex-direction:column;align-items:center;gap:5px;color:var(--muted);font-size:12px;padding:4px 0;transition:color .2s}
+.bottom a .ic{font-size:19px}
+.bottom a.active,.bottom a:hover{color:var(--acc-text)}
+
+@media (max-width:380px){ .stat .lbl{font-size:13px} }
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+
+<body class="loading">
+
+<!-- Sprite de ícones (SVG inline, não depende de fontes externas) -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol>
+  <symbol id="i-desktop" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="22 6 12 13 2 6"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></symbol>
+  <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.5 6.5h.01"/></symbol>
+  <symbol id="i-linkedin" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="3"/><path d="M7 10v7M7 7v.01M11 17v-7M11 13a3 3 0 0 1 6 0v4"/></symbol>
+  <symbol id="i-spotify" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M7 9.5c3-1 7-.8 10 1M7.5 13c2.6-.8 5.8-.5 8.2.9M8 16.4c2.2-.6 4.6-.4 6.6.7"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><polyline points="12 5 19 12 12 19"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6M18 9h1.5a2.5 2.5 0 0 0 0-5H18M4 22h16M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22M18 2H6v7a6 6 0 0 0 12 0V2z"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8" stroke-dasharray="4 2.6"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+  <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.6 7.6"/><circle cx="11" cy="11" r="2"/></symbol>
+  <symbol id="i-layout" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-handshake" viewBox="0 0 24 24"><path d="M11 17l2 2a1.41 1.41 0 0 0 2-2l-2-2"/><path d="M14 14l2.5 2.5a1.41 1.41 0 0 0 2-2L16 12"/><path d="M2 12l5-5 3 1 4 4 4-1 4 4"/><path d="M5 12l4 4a1.41 1.41 0 0 0 2-2"/></symbol>
+</svg>
+
+<!-- Preloader: fantasma carrega, explode e revela a página -->
+<div id="preloader" aria-hidden="true">
+  <div class="ld">
+    <div class="ghost-wrap" id="ghostWrap">
+      <svg class="ghost" viewBox="0 0 100 120">
+        <defs>
+          <linearGradient id="gg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color:#FFFFFF"/>
+            <stop offset="1" style="stop-color:var(--acc);stop-opacity:.6"/>
+          </linearGradient>
+        </defs>
+        <path d="M10 60 A40 40 0 0 1 90 60 L90 102 Q82 112 74 102 Q66 92 58 102 Q50 112 42 102 Q34 92 26 102 Q18 112 10 102 Z" fill="url(#gg)"/>
+        <ellipse cx="38" cy="56" rx="5" ry="7" fill="#0C0C0C"/>
+        <ellipse cx="62" cy="56" rx="5" ry="7" fill="#0C0C0C"/>
+        <ellipse cx="50" cy="76" rx="4" ry="5" fill="#0C0C0C"/>
+      </svg>
+    </div>
+    <div class="bar"><i></i></div>
+    <p><span id="ldPct">0</span>%</p>
+  </div>
+</div>
+
+<div class="app" id="top">
+
+  <!-- Topo -->
+  <header>
+    <div class="topbar">
+      <button class="logo-btn" id="theme" type="button" aria-label="Trocar cor de destaque">
+        <svg viewBox="0 0 40 40" aria-hidden="true">
+          <defs>
+            <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" style="stop-color:var(--acc-light)"/>
+              <stop offset="1" style="stop-color:var(--acc-dark)"/>
+            </linearGradient>
+          </defs>
+          <rect width="40" height="40" rx="11" fill="url(#lg)"/>
+          <path d="M12 10 V29 H19" fill="none" stroke="#0C0C0C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M22 29 V10 L27 19 L32 10 V29" fill="none" stroke="#0C0C0C" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><span></span><span></span><span></span></button>
+
+      <nav class="menu" id="menu" aria-label="Menu">
+        <a href="https://mdeveloper.netlify.app/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-desktop"/></svg>Meu site portfólio</a>
+        <a href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=leonardomb.dev@gmail.com" target="_blank" rel="noopener"><svg class="ic"><use href="#i-mail"/></svg>Contrate meus serviços</a>
+        <a href="https://github.com/LeonardoMarx" target="_blank" rel="noopener"><svg class="ic"><use href="#i-github"/></svg>GitHub</a>
+        <a href="https://www.instagram.com/leommars/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-instagram"/></svg>Instagram</a>
+        <a href="https://www.linkedin.com/in/leonardo-marques-bomtempo/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-linkedin"/></svg>LinkedIn</a>
+      </nav>
+    </div>
+
+
+  <main>
+    <!-- Perfil -->
+    <section class="profile">
+      <div class="avatar">
+        <div class="inner">
+          LM
+          <img src="https://i.ibb.co/Q7580yMC/IMG-0362.jpg" alt="IMG 0362" border="0">" alt="Foto de Leonardo Marques" onerror="this.remove()" />
+        </div>
+      </div>
+      <h1 class="name">Leonardo Marques</h1>
+      <p class="handle">@leommars</p>
+    </section>
+
+    <!-- Estatísticas -->
+    <section class="stats" aria-label="Resumo">
+      <div class="stat">
+        <div class="val"><svg class="ic"><use href="#i-target"/></svg>9</div>
+        <div class="lbl">Skills</div>
+      </div>
+      <span class="split"></span>
+      <div class="stat">
+        <div class="val"><svg class="ic"><use href="#i-code"/></svg>Dev</div>
+        <div class="lbl">Front-end</div>
+      </div>
+      <span class="split"></span>
+      <div class="stat">
+        <div class="val"><svg class="ic"><use href="#i-pen"/></svg>UI/UX</div>
+        <div class="lbl">Design</div>
+      </div>
+    </section>
+
+    <!-- Caixa com fantasma -->
+    <p class="section-label"></p>
+    <div class="fx" id="fx" role="button" tabindex="0" aria-label="Fantasma animado. Clique para ele se mover">
+      <canvas id="fxCanvas"></canvas>
+      <span class="hint">Clique no fantasma</span>
+    </div>
+
+    <!-- Redes + Projetos -->
+    <section class="grid2">
+      <div class="card social-card">
+        <div class="socials">
+          <a href="https://github.com/LeonardoMarx" target="_blank" rel="noopener" aria-label="GitHub"><svg class="ic"><use href="#i-github"/></svg></a>
+          <a href="https://www.instagram.com/leommars/" target="_blank" rel="noopener" aria-label="Instagram"><svg class="ic"><use href="#i-instagram"/></svg></a>
+          <a href="https://www.linkedin.com/in/leonardo-marques-bomtempo/" target="_blank" rel="noopener" aria-label="LinkedIn"><svg class="ic"><use href="#i-linkedin"/></svg></a>
+        </div>
+        <div class="title">Redes</div>
+        <div class="sub">Me siga</div>
+      </div>
+
+      <a class="card trophy" href="https://mdeveloper.netlify.app/" target="_blank" rel="noopener">
+        <h3>Meu portfólio</h3>
+        <p>Confira meus projetos e trabalhos recentes.</p>
+        <div class="steps" aria-hidden="true"><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div>
+        <svg class="ic big" aria-hidden="true"><use href="#i-trophy"/></svg>
+      </a>
+    </section>
+
+    <!-- Banner de contato -->
+    <a class="banner" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=leonardomb.dev@gmail.com" target="_blank" rel="noopener">
+      <span class="art"><svg class="ic"><use href="#i-briefcase"/></svg></span>
+      <span>
+        <h2>Contrate meus serviços</h2>
+        <p>Vamos conversar sobre o seu projeto de front-end ou UI/UX.</p>
+      </span>
+      <svg class="ic go" aria-hidden="true"><use href="#i-arrow"/></svg>
+    </a>
+
+    <!-- Hard Skills -->
+    <h2 class="section-title">Hard Skills</h2>
+    <ul class="pills">
+      <li>HTML</li><li>CSS</li><li>JavaScript</li><li>React</li><li>Next.js</li>
+      <li>TypeScript</li><li>Git</li><li>Figma</li><li>Design UI/UX</li>
+    </ul>
+
+    <!-- Spotify -->
+    <section class="listen">
+      <h2><svg class="ic"><use href="#i-spotify"/></svg>Estou escutando...</h2>
+      <iframe title="Música no Spotify" src="https://open.spotify.com/embed/track/5na9M4vuGBFxIAQdD3Hg9s?utm_source=generator&amp;theme=0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+    </section>
+  </main>
+
+  <footer>
+    <p style="margin:0">© <span id="ano"></span> Leonardo Marques<span class="sep">|</span>Todos os direitos reservados.</p>
+  </footer>
+</div>
+
+<!-- Navegação inferior -->
+<nav class="bottom" aria-label="Navegação principal">
+  <a href="#top" class="active"><svg class="ic"><use href="#i-layout"/></svg>Início</a>
+  <a href="https://mdeveloper.netlify.app/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-globe"/></svg>Portfólio</a>
+  <a href="https://github.com/LeonardoMarx" target="_blank" rel="noopener"><svg class="ic"><use href="#i-github"/></svg>GitHub</a>
+  <a href="https://www.linkedin.com/in/leonardo-marques-bomtempo/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-linkedin"/></svg>LinkedIn</a>
+</nav>
+
+<script>
+// ===== Troca de cor de destaque em loop (verde > vermelho > roxo > verde) =====
+var ACCENTS = [
+  { acc:'#C8F43A', light:'#E4FF7A', dark:'#B8E62E', rgb:'200,244,58' },  // verde
+  { acc:'#FF4D5E', light:'#FF8A96', dark:'#D92B3F', rgb:'255,77,94' },   // vermelho
+  { acc:'#A66BFF', light:'#C9A6FF', dark:'#7B3FE4', rgb:'166,107,255' }  // roxo
+];
+var accIndex = 0;
+try { accIndex = parseInt(localStorage.getItem('accent'), 10) || 0; } catch (e) {}
+if (accIndex < 0 || accIndex >= ACCENTS.length) accIndex = 0;
+
+function applyAccent(i){
+  var a = ACCENTS[i], s = document.documentElement.style;
+  s.setProperty('--acc', a.acc);
+  s.setProperty('--acc-text', a.acc);
+  s.setProperty('--acc-light', a.light);
+  s.setProperty('--acc-dark', a.dark);
+  s.setProperty('--acc-rgb', a.rgb);
+  window.__accRgb = a.rgb;
+}
+applyAccent(accIndex);
+
+var logoBtn = document.getElementById('theme');
+logoBtn.addEventListener('click', function(e){
+  e.stopPropagation();
+  accIndex = (accIndex + 1) % ACCENTS.length;
+  applyAccent(accIndex);
+  logoBtn.classList.remove('spin');
+  void logoBtn.offsetWidth; // reinicia a animação
+  logoBtn.classList.add('spin');
+  try { localStorage.setItem('accent', String(accIndex)); } catch (err) {}
+});
+
+// Preloader: fantasma carrega, explode e libera a página
+window.addEventListener('load', function () {
+  var p = document.getElementById('preloader');
+  var wrap = document.getElementById('ghostWrap');
+  var pct = document.getElementById('ldPct');
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function done(){
+    p.classList.add('hide');
+    document.body.classList.remove('loading');
+    setTimeout(function(){ p.style.display = 'none'; }, 700);
+  }
+  if (reduce) { done(); return; }
+
+  var start = performance.now();
+  function tick(now){
+    var k = Math.min(1, (now - start) / 2200);
+    pct.textContent = Math.round(k * 100);
+    if (k < 1) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  setTimeout(function(){ wrap.classList.add('shake'); }, 2200);
+  setTimeout(function(){
+    wrap.classList.remove('shake');
+    wrap.classList.add('boom');
+    for (var i = 0; i < 36; i++){
+      var s = document.createElement('span');
+      s.className = 'p';
+      var a = Math.random() * Math.PI * 2, d = 90 + Math.random() * 130;
+      s.style.setProperty('--dx', (Math.cos(a) * d).toFixed(0) + 'px');
+      s.style.setProperty('--dy', (Math.sin(a) * d).toFixed(0) + 'px');
+      s.style.background = Math.random() < 0.7 ? 'var(--acc)' : '#FFFFFF';
+      s.style.animationDelay = (Math.random() * 0.1).toFixed(2) + 's';
+      wrap.appendChild(s);
+    }
+  }, 2600);
+  setTimeout(done, 3100);
+});
+
+// Ano automático
+document.getElementById('ano').textContent = new Date().getFullYear();
+
+// Menu
+var btn = document.getElementById('menuBtn'), menu = document.getElementById('menu');
+btn.addEventListener('click', function (e) {
+  e.stopPropagation();
+  var open = menu.classList.toggle('open');
+  btn.setAttribute('aria-expanded', open);
+});
+document.addEventListener('click', function () { menu.classList.remove('open'); btn.setAttribute('aria-expanded', false); });
+document.addEventListener('keydown', function (e) { if (e.key === 'Escape') menu.classList.remove('open'); });
+
+// ===== Fantasma animado (canvas) =====
+(function(){
+  var box = document.getElementById('fx');
+  var cv = document.getElementById('fxCanvas');
+  var ctx = cv.getContext('2d');
+  var W = 0, H = 0, dpr = 1, t = 0, kick = -999, seed = 0.6;
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function rgba(a){ return 'rgba(' + (window.__accRgb || '200,244,58') + ',' + a + ')'; }
+
+  function resize(){
+    dpr = window.devicePixelRatio || 1;
+    var r = box.getBoundingClientRect();
+    W = r.width; H = r.height;
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function ghostPath(c, x, y, s){
+    var w = 22 * s, midY = y + 2 * s, hemY = y + 26 * s;
+    c.beginPath();
+    c.moveTo(x - w, midY);
+    c.arc(x, midY, w, Math.PI, 0, false);
+    c.lineTo(x + w, hemY);
+    var n = 4, step = (2 * w) / n;
+    for (var k = 0; k < n; k++){
+      var xa = x + w - k * step, xb = xa - step;
+      var wob = Math.sin(t * 0.06 + k * 1.3) * 1.2 * s;
+      c.quadraticCurveTo((xa + xb) / 2, hemY + 8 * s + wob, xb, hemY + wob * 0.5);
+    }
+    c.closePath();
+  }
+
+  function drawGhost(c, x, y, s, alpha){
+    var glow = c.createRadialGradient(x, y, 0, x, y, 70 * s);
+    glow.addColorStop(0, rgba(0.16 * alpha));
+    glow.addColorStop(1, rgba(0));
+    c.fillStyle = glow;
+    c.fillRect(x - 80 * s, y - 80 * s, 160 * s, 160 * s);
+
+    c.globalAlpha = alpha;
+    ghostPath(c, x, y, s);
+    var g = c.createLinearGradient(0, y - 24 * s, 0, y + 34 * s);
+    g.addColorStop(0, '#FFFFFF');
+    g.addColorStop(1, rgba(0.6));
+    c.fillStyle = g;
+    c.fill();
+
+    var blink = (t % 260) < 8;
+    var ry = blink ? 0.6 * s : 4 * s;
+    c.fillStyle = '#0C0C0C';
+    c.beginPath(); c.ellipse(x - 7.5 * s, y - 4 * s, 3 * s, ry, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.ellipse(x + 7.5 * s, y - 4 * s, 3 * s, ry, 0, 0, Math.PI * 2); c.fill();
+    c.beginPath(); c.ellipse(x, y + 8 * s, 1.6 * s, 2 * s, 0, 0, Math.PI * 2); c.fill();
+
+    c.globalAlpha = 1;
+  }
+
+  function frame(){
+    if (!reduce) t += 1;
+    ctx.clearRect(0, 0, W, H);
+
+    var s = Math.max(0.9, Math.min(1.25, H / 150));
+    var bob = Math.sin(t * 0.04) * 4;
+    var x = W * (0.5 + 0.28 * Math.sin(t * 0.006 + seed));
+    var y = H * 0.46 + bob + Math.sin(t * 0.011 + seed) * H * 0.06;
+
+    var p = t - kick, alpha = 1;
+    if (p < 40){
+      var q = p / 40;
+      alpha = 1 - 0.9 * Math.sin(q * Math.PI);
+      if (p >= 20 && p < 21) seed = Math.random() * 6.28;
+    }
+
+    var shW = (20 - bob * 0.6) * s;
+    ctx.fillStyle = rgba(0.10 * alpha);
+    ctx.beginPath(); ctx.ellipse(x, y + 52 * s, shW, 3.5 * s, 0, 0, Math.PI * 2); ctx.fill();
+
+    for (var i = 0; i < 5; i++){
+      var a = t * 0.012 + i * 1.26;
+      var px = x + Math.cos(a) * 46 * s;
+      var py = y - 6 * s + Math.sin(a * 1.3) * 26 * s;
+      ctx.fillStyle = rgba((0.25 + 0.25 * Math.sin(t * 0.05 + i)) * alpha);
+      ctx.fillRect(px, py, 1.6, 1.6);
+    }
+
+    drawGhost(ctx, x, y, s, alpha);
+    requestAnimationFrame(frame);
+  }
+
+  function react(){ kick = t; }
+  box.addEventListener('click', react);
+  box.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); react(); }
+  });
+  window.addEventListener('resize', resize);
+
+  resize();
+  frame();
+})();
+</script>
+</body>
+</html>
